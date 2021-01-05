@@ -6,19 +6,28 @@
             inactive-color="#000"
             @change="changeItem"
         >
-            <van-tabbar-item icon="home-o">电影</van-tabbar-item>
-            <van-tabbar-item icon="search">影院</van-tabbar-item>
-            <van-tabbar-item icon="friends-o">我的</van-tabbar-item>
+            <van-tabbar-item
+                ><van-icon class-prefix="iconfont icon-dianying" slot="icon" size="1.2rem"/><span>电影</span></van-tabbar-item
+            >
+            <van-tabbar-item
+                ><van-icon class-prefix="iconfont icon-yingyuan" slot="icon" size="1.2rem"/><span>影院</span></van-tabbar-item
+            >
+            <van-tabbar-item
+                ><van-icon class-prefix="iconfont icon-wode" slot="icon" size="1.2rem"/><span>我的</span></van-tabbar-item
+            >
         </van-tabbar>
     </div>
 </template>
 
 <script>
+// 导入需要使用的字体样式文件（语法形式区别开JavaScript、vue文件模块）
+import "@/assets/font/iconfont.css";
 // 导入vant组件
 import Vue from "vue";
-import { Tabbar, TabbarItem } from "vant";
+import { Tabbar, TabbarItem, Icon } from "vant";
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
+Vue.use(Icon);
 export default {
     data() {
         return {
