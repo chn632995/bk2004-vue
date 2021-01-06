@@ -9,7 +9,11 @@
             <div class="loading" v-show="isLoading">
                 <van-loading size="24px" type="spinner">加载中...</van-loading>
             </div>
-            <van-card v-for="item in list" :key="item.filmId">
+            <van-card
+                v-for="item in list"
+                :key="item.filmId"
+                @click="goDetail(item.filmId)"
+            >
                 <!-- 封面图片 -->
                 <template #thumb>
                     <img :src="item.poster" width="66" />
@@ -85,6 +89,11 @@ export default {
                     this.isLoading = false;
                     this.isLoading2 = false;
                 });
+        },
+        // 编程导航，去详情页面
+        goDetail(filmId) {
+            // 切记不要给filmId前面加上“:”
+            this.$router.push("/film/" + filmId);
         },
     },
     // 过滤器
