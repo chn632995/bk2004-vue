@@ -1,33 +1,39 @@
 <template>
-    <div>
-        <!-- v-show控制组件是否显示 -->
-        <div class="loading" v-show="isLoading">
-            <van-loading size="24px" type="spinner">加载中...</van-loading>
-        </div>
-        <van-card v-for="item in list" :key="item.filmId">
-            <!-- 封面图片 -->
-            <template #thumb>
-                <img :src="item.poster" width="66" />
-            </template>
-            <!-- 电影名称 -->
-            <template #title>
-                <div class="title">
-                    {{ item.name }}
-                    <span class="item">{{ item.filmType.name }}</span>
-                </div>
-            </template>
-            <!-- 电影的介绍 -->
-            <template #desc>
-                <div class="desc">
-                    <div class="nowPlayingFilm-buy">购票</div>
-                    <div>
-                        观众评分 <span class="grade">{{ item.grade }}</span>
+    <div class="container">
+        <van-pull-refresh
+            v-model="isLoading2"
+            success-text="刷新成功"
+            @refresh="onRefresh"
+        >
+            <!-- v-show控制组件是否显示 -->
+            <div class="loading" v-show="isLoading">
+                <van-loading size="24px" type="spinner">加载中...</van-loading>
+            </div>
+            <van-card v-for="item in list" :key="item.filmId">
+                <!-- 封面图片 -->
+                <template #thumb>
+                    <img :src="item.poster" width="66" />
+                </template>
+                <!-- 电影名称 -->
+                <template #title>
+                    <div class="title">
+                        {{ item.name }}
+                        <span class="item">{{ item.filmType.name }}</span>
                     </div>
-                    <div>主演：{{ item.actors | parseActors }}</div>
-                    <div>{{ item.nation }} | {{ item.runtime }} 分钟</div>
-                </div>
-            </template>
-        </van-card>
+                </template>
+                <!-- 电影的介绍 -->
+                <template #desc>
+                    <div class="desc">
+                        <div class="nowPlayingFilm-buy">购票</div>
+                        <div>
+                            观众评分 <span class="grade">{{ item.grade }}</span>
+                        </div>
+                        <div>主演：{{ item.actors | parseActors }}</div>
+                        <div>{{ item.nation }} | {{ item.runtime }} 分钟</div>
+                    </div>
+                </template>
+            </van-card>
+        </van-pull-refresh>
     </div>
 </template>
 <script>
@@ -35,10 +41,11 @@
 import uri from "@/config/uri";
 // 导入vant组件
 import Vue from "vue";
-import { Loading, Toast, Card } from "vant";
+import { Loading, Toast, Card, PullRefresh } from "vant";
 Vue.use(Loading);
 Vue.use(Toast);
 Vue.use(Card);
+Vue.use(PullRefresh);
 export default {
     data() {
         return {
@@ -46,7 +53,39 @@ export default {
             list: [],
             // 控制加载组件是否显示
             isLoading: true,
+            // 控制下拉刷新的加载提示的
+            isLoading2: true,
+            // 默认页码
+            pageNum: 1,
         };
+    },
+    // methods
+    methods: {
+        onRefresh() {
+            // 发起请求获取数据
+            this.getData();
+        },
+        // 专门获取网络请求的数据
+        getData() {
+            this.$http
+                .get(uri.getNowPlaying + "?pageNum=" + this.pageNum)
+                .then((ret) => {
+                    if (ret.status == 0) {
+                        if (this.pageNum <= Math.ceil(ret.data.total / 10)) {
+                            // 请求成功（注意新旧数据的整合）
+                            this.list = [...ret.data.films, ...this.list];
+                            // 让页码加1
+                            this.pageNum++;
+                        }
+                    } else {
+                        // 请求失败
+                        Toast.fail("网络繁忙");
+                    }
+                    // 数据加载完成，去除加载组件的显示
+                    this.isLoading = false;
+                    this.isLoading2 = false;
+                });
+        },
     },
     // 过滤器
     filters: {
@@ -68,17 +107,20 @@ export default {
     },
     created() {
         // 遵循原则：早获取，早显示
-        this.$http.get(uri.getNowPlaying).then((ret) => {
-            if (ret.status == 0) {
-                // 请求成功
-                this.list = ret.data.films;
-            } else {
-                // 请求失败
-                Toast.fail("网络繁忙");
-            }
-            // 数据加载完成，去除加载组件的显示
-            this.isLoading = false;
-        });
+        // this.$http
+        //     .get(uri.getNowPlaying + "?pageNum=" + this.pageNum)
+        //     .then((ret) => {
+        //         if (ret.status == 0) {
+        //             // 请求成功
+        //             this.list = ret.data.films;
+        //         } else {
+        //             // 请求失败
+        //             Toast.fail("网络繁忙");
+        //         }
+        //         // 数据加载完成，去除加载组件的显示
+        //         this.isLoading = false;
+        //     });
+        this.getData();
     },
 };
 </script>
@@ -135,5 +177,8 @@ img {
 .van-card__thumb {
     width: 66px;
     height: 92px;
+}
+.container {
+    margin-bottom: 50px;
 }
 </style>
