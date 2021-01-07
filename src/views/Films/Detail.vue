@@ -77,6 +77,12 @@ export default {
                     Toast.fail(ret.msg);
                 }
             });
+        // 进入时通知App隐藏底部导航（emit）
+        this.$eventBus.$emit("show_jiojio", false);
+    },
+    beforeDestroy() {
+        // 离开时通知App显示底部导航（emit）
+        this.$eventBus.$emit("show_jiojio", true);
     },
 };
 </script>

@@ -3,7 +3,7 @@
         <!-- 测试vant组件的使用的（用完即删） -->
         <!-- <van-cell title="选择单个日期" :value="date" @click="show = true" />
         <van-calendar v-model="show" @confirm="onConfirm" /> -->
-        <Footer />
+        <Footer v-show="isShow"></Footer>
         <router-view />
     </div>
 </template>
@@ -21,6 +21,11 @@ export default {
     // 注册组件
     components: {
         Footer,
+    },
+    data() {
+        return {
+            isShow: true,
+        };
     },
     // vant测试代码（用完即删）
     // data() {
@@ -41,6 +46,11 @@ export default {
     created() {
         // 测试网络请求是否可用，用完即删
         // this.$http.get(uri.getCities).then(ret => console.log(ret));
+
+        // 开始监听show_jiojio事件
+        this.$eventBus.$on("show_jiojio", (flag) => {
+            this.isShow = flag;
+        });
     },
 };
 </script>
