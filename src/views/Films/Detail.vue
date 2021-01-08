@@ -48,6 +48,8 @@ Vue.use(VueLazyload, {
 });
 // 导入moment
 import moment from "moment";
+// 导入映射系列的方法
+import { mapMutations } from "vuex";
 export default {
     data() {
         return {
@@ -64,6 +66,9 @@ export default {
             return moment(timestamp * 1000).format("YYYY-MM-DD");
         },
     },
+    methods: {
+        ...mapMutations("global", ["setFooter"]),
+    },
     created() {
         // 请求数据
         this.$http
@@ -78,11 +83,13 @@ export default {
                 }
             });
         // 进入时通知App隐藏底部导航（emit）
-        this.$eventBus.$emit("show_jiojio", false);
+        // this.$eventBus.$emit("show_jiojio", false);
+        this.setFooter(false);
     },
     beforeDestroy() {
         // 离开时通知App显示底部导航（emit）
-        this.$eventBus.$emit("show_jiojio", true);
+        // this.$eventBus.$emit("show_jiojio", true);
+        this.setFooter(true);
     },
 };
 </script>

@@ -3,6 +3,10 @@
         <!-- 测试vant组件的使用的（用完即删） -->
         <!-- <van-cell title="选择单个日期" :value="date" @click="show = true" />
         <van-calendar v-model="show" @confirm="onConfirm" /> -->
+
+        <!-- 这种方式可以让视图内容发生变化，内容一旦变化组件会重新渲染 -->
+        <!-- <Footer v-show="$store.state.global.isShowFooter"></Footer> -->
+        <!-- 通过计算属性来实现对应的效果 -->
         <Footer v-show="isShow"></Footer>
         <router-view />
     </div>
@@ -24,7 +28,7 @@ export default {
     },
     data() {
         return {
-            isShow: true,
+            // isShow: true,
         };
     },
     // vant测试代码（用完即删）
@@ -48,9 +52,16 @@ export default {
         // this.$http.get(uri.getCities).then(ret => console.log(ret));
 
         // 开始监听show_jiojio事件
-        this.$eventBus.$on("show_jiojio", (flag) => {
-            this.isShow = flag;
-        });
+        // this.$eventBus.$on("show_jiojio", (flag) => {
+        //     this.isShow = flag;
+        // });
+        // 根组件的前4个生命周期只走一次（根组件进来之后一直不会被销毁）
+        console.log("app");
+    },
+    computed: {
+        isShow() {
+            return this.$store.state.global.isShowFooter;
+        },
     },
 };
 </script>

@@ -16,6 +16,8 @@ import filmRouter from "./routes/film";
 import cinemaRouter from "./routes/cinema";
 import centerRouter from "./routes/center";
 import VuexCmp from "@/views/Vuex";
+// 导入城市列表组件
+import City from "@/views/City/Index";
 
 const routes = [
     {
@@ -26,11 +28,15 @@ const routes = [
         path: "/vuex",
         component: VuexCmp,
     },
+    {
+        path: "/city",
+        component: City,
+    },
     // 模块化
     // 需要展开的，导出的是一个数组，但是人家希望要的是对象
     ...filmRouter,
     cinemaRouter,
-    centerRouter,
+    ...centerRouter,
     //     电影模块
     // 	        电影模块父			/films
     // 		    正在热映			/films/nowPlaying
@@ -75,6 +81,29 @@ const router = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
     routes,
+});
+
+// 路由守卫在这里写
+// 在做鉴权的时候如果需要拦截，一定要在进入路由之前
+import store from "@/store/index";
+router.beforeEach((to, from, next) => {
+    // console.log(to, from);//to.path
+    // 定义权限数组（可以模块化）
+    let quanxian = ["/balence", "/settings"];
+    // 获取jwt
+    let _token = store.state.global._token;
+    if (_token) {
+        next();
+    } else {
+        // 可能没登录
+        if (quanxian.includes(to.path)) {
+            // 登录(加上点功能，让用户登录完之后继续回到刚才想看的页面)
+            router.push({ path: "/login", query: { callback: to.path } });
+        } else {
+            // 不需要登录
+            next();
+        }
+    }
 });
 
 export default router;

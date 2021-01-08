@@ -8,7 +8,13 @@ import axios from "@/api/http";
 Vue.prototype.$http = axios;
 
 // 事件中心的定义
-Vue.prototype.$eventBus = new Vue();
+// Vue.prototype.$eventBus = new Vue();
+
+// 从缓存中取出jwt赋给vuex
+let jwt = localStorage.getItem("_token");
+if (jwt) {
+    store.commit("global/setJwt", jwt);
+}
 
 Vue.config.productionTip = false;
 
