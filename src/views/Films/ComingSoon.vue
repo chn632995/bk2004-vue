@@ -74,7 +74,7 @@ export default {
         // 专门获取网络请求的数据
         getData() {
             this.$http
-                .get(uri.getComingSoon + "?pageNum=" + this.pageNum)
+                .get(uri.getComingSoon + "pageNum=" + this.pageNum)
                 .then((ret) => {
                     if (ret.status == 0) {
                         if (this.pageNum <= Math.ceil(ret.data.total / 10)) {

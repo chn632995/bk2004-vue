@@ -51,7 +51,7 @@ export default {
             // console.log("submit", values);
             // 发送请求
             this.$http
-                .post("http://127.0.0.1:2004/backend/login", values)
+                .post("http://39.105.44.237:2004/backend/login", values)
                 .then((ret) => {
                     if (ret.error_code == 0) {
                         Toast.success("登录成功！");

@@ -72,7 +72,7 @@ export default {
     created() {
         // 请求数据
         this.$http
-            .get(uri.getDetail + "?filmId=" + this.$route.params.filmId)
+            .get(uri.getDetail + "filmId=" + this.$route.params.filmId)
             .then((ret) => {
                 if (ret.status == 0) {
                     // 请求成功

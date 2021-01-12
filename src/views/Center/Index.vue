@@ -161,7 +161,7 @@ export default {
         if (jwt) {
             // 发请求
             this.$http
-                .get("http://127.0.0.1:2004/backend/get_user_info")
+                .get("http://39.105.44.237:2004/backend/get_user_info")
                 .then((ret) => (this.userInfo = ret.data));
         }
     },
